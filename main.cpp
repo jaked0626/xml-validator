@@ -10,7 +10,7 @@ void print_usage(std::ostream& stream)
 {
     stream <<  "Usage:" << program_name << " options <xmlString>\n";
     stream << " -h --help display this usage information.\n";
-    stream << " -v --verbose Print verbose messages.\n";
+    stream << " -v --verbose display verbose messages.\n";
     stream << "Arguments:\n";
     stream << " <xmlString>   The XML string to validate.\n";
 }
@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
     using std::string, std::cout, std::cerr, std::endl, std::exit;
 
     program_name = argv[0];
+    bool verbose = false;
     const char* const short_options = "hv";
     const struct option long_options[] =
     {
@@ -36,6 +37,9 @@ int main(int argc, char *argv[])
         case 'h':
             print_usage(cout);
             exit(0);
+        case 'v':
+            verbose = true;
+            break;
         case '?':
             print_usage(cerr);
             exit(1);
@@ -45,11 +49,11 @@ int main(int argc, char *argv[])
     }
 
     string input;
-    if (argc > 1)
+    if (optind < argc)
     {
-        input = string(argv[1]);
+        input = string(argv[optind]);
     }
 
-    cout << (DetermineXml(input) ? "Valid" : "Invalid") << endl;
+    cout << (DetermineXml(input, verbose) ? "Valid" : "Invalid") << endl;
     return 0;
 }

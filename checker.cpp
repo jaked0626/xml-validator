@@ -17,6 +17,8 @@ int main(int argc, char *argv[])
         {"<People age=”1”>hello world</People>", false},                       // there is no closing tag for "People age=”1”" and no opening tag for "/People"
         {"<Element />", true},                                                 // self closing tag is valid
         {"<Element>&lt &gt</Element>", true},                                  // character entity references should be ignored
+        {"<Element", false},                                                   // unclosed tag is invalid 
+        // {"Element>", false},                                                   // tag is ill formatted 
     };
 
     int failed_count = 0;
@@ -25,7 +27,7 @@ int main(int argc, char *argv[])
         auto &input = get<0>(test_case);
         auto &expected = get<1>(test_case);
 
-        auto result = DetermineXml(input);
+        auto result = DetermineXml(input, false);
         auto result_str = result ? "Valid" : "Invalid";
 
         if (result == expected)

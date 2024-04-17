@@ -36,3 +36,4 @@ Added:
 ## Anything Else?
 
 - global using directives can cause name collisions down the line so i have moved all using directives to a local scope with higher specificity.
+- I am using syntax specific to c++ std=17 (one line using directives) and have specified the cpp standard in `CMakeLists.txt`

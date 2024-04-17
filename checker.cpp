@@ -15,10 +15,18 @@ int main(int argc, char *argv[])
         {"<Design><Code>hello world</Code></Design><People>", false},          // no closing tag for "People"
         {"<People><Design><Code>hello world</People></Code></Design>", false}, // "/Code" should come before "/People"
         {"<People age=”1”>hello world</People>", false},                       // there is no closing tag for "People age=”1”" and no opening tag for "/People"
-        {"<Element />", true},                                                 // self closing tag is valid
+        {R"(<library><book><title>The Great Gatsby</title><author>F.
+        Scott Fitzgerald</author></book><book><title>To Kill a Mockingbird
+        </title><author>Harper Lee</author></book></library>)", true},         // larger xml string
         {"<Element>&lt &gt</Element>", true},                                  // character entity references should be ignored
-        {"<Element", false},                                                   // unclosed tag is invalid 
-        // {"Element>", false},                                                   // tag is ill formatted 
+        {"<Element />", true},                                                 // self closing tag is valid
+        {"<Element", false},                                                   // unclosed tag is invalid
+        {R"(<root><element><![CDATA[This is some text that will not be
+        parsed by the XML parser. It can include characters that would
+        otherwise be considered markup.]]></element></root>)", true},          // cdata should be ignored
+        {"<root><element><!-- This is a comment --></element></root>", true},  // comments should be ignored
+        {R"(<?xml version=\"1.0\" encoding=\"UTF-8\"?><root>
+        <element>Content</element></root>)", true},                            // processing instructions should be ignored
     };
 
     int failed_count = 0;

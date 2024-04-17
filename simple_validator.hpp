@@ -2,12 +2,20 @@
 #include <stack>
 
 /**
- * @brief check for corner case of self closing tags. Assumes "<" or ">" that are intended 
- * to be strings are written as their respective character entity references. 
-*/
+ * @brief Determines if an XML string is valid.
+ *
+ * @param input The XML string to be checked.
+ * @param verbose A boolean flag indicating output of verbose messages.
+ *
+ * @return true if XML string valid, false otherwise.
+ *
+ * @note assumes that any "<" or ">" characters intended to be part of a string
+ * are written as their respective character entity references. Ignores contents
+ * of tag enclosed within its angle brackets, cdata, and comments.
+ */
 bool DetermineXml(const std::string &input, const bool verbose)
 {
-    using std::string, std::stack, std::cout, std::endl;
+    using std::string, std::stack, std::cout;
 
     stack<string> el_stack;
     int el_start = 0;
@@ -17,24 +25,28 @@ bool DetermineXml(const std::string &input, const bool verbose)
     while ((el_start = input.find('<', el_end)) != string::npos)
     {
         el_end = input.find('>', el_start);
+
+        // unclosed tags are invalid
         if (el_end == string::npos) {
             if (verbose) { cout << "Message: Unclosed tag.\n"; }
             return false;
         }
 
         el = input.substr(el_start, el_end - el_start + 1);
+
+        // catch ill formatted tags
         if (el[0] != '<' || el[el.size() - 1] != '>') {
             if (verbose) { cout << "Message: Tag structure is invalid.\n"; }
             return false;
         }
-
-        // skip self closing tag
-        if (el[el.size() - 2] == '/')
+        // skip self closing tags, cdata, and comments
+        if (el[el.size() - 2] == '/' || el[1] == '!' || el[1] == '?')
         {
             continue;
         }
+
         // opening tag
-        else if (el[1] != '/')
+        if (el[1] != '/')
         {
             el_stack.push(el.substr(1, el.size() - 1));
         }
@@ -49,7 +61,7 @@ bool DetermineXml(const std::string &input, const bool verbose)
             el_stack.pop();
         }
     }
-    
+
     if (!el_stack.empty()) 
     { 
         if (verbose) { cout << "Message: Unmatched opening tag\n"; }

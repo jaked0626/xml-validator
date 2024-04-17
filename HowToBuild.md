@@ -3,11 +3,25 @@
 ### In CMake
 
 Type the following commands:
+
 ```sh
 # Make directory to build
 $ mkdir b && cd b
 $ cmake ..
 $ make
+```
+
+Test:
+
+```sh
+$ ./checker
+```
+
+Run:
+
+```sh
+$ ./validator <xmlString>
+$ # run ./validator -h for more details on usage
 ```
 
 ### In Visual Studio

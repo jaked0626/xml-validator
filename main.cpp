@@ -49,9 +49,14 @@ int main(int argc, char *argv[])
     }
 
     string input;
-    if (optind < argc)
+    if (optind == argc - 1)
     {
         input = string(argv[optind]);
+    }
+    else
+    {
+        print_usage(cerr);
+        exit(1);
     }
 
     cout << (DetermineXml(input, verbose) ? "Valid" : "Invalid") << endl;

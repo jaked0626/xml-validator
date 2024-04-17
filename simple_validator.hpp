@@ -27,7 +27,8 @@ bool DetermineXml(const std::string &input, const bool verbose)
         el_end = input.find('>', el_start);
 
         // unclosed tags are invalid
-        if (el_end == string::npos) {
+        if (el_end == string::npos) 
+        {
             if (verbose) { cout << "Message: Unclosed tag.\n"; }
             return false;
         }
@@ -35,7 +36,8 @@ bool DetermineXml(const std::string &input, const bool verbose)
         el = input.substr(el_start, el_end - el_start + 1);
 
         // catch ill formatted tags
-        if (el[0] != '<' || el[el.size() - 1] != '>') {
+        if (el[0] != '<' || el[el.size() - 1] != '>') 
+        {
             if (verbose) { cout << "Message: Tag structure is invalid.\n"; }
             return false;
         }
